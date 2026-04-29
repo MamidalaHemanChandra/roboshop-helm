@@ -1,23 +1,27 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cart
+  name: payment
   namespace: roboshop
 data:
-  REDIS_HOST: "redis"
-  CATALOGUE_HOST: "catalogue"
-  CATALOGUE_PORT: "8080"
+  CART_HOST: "cart"
+  CART_PORT: "8080"
+  USER_HOST: "user"
+  USER_PORT: "8080"
+  AMQP_HOST: "rabbitmq"
+  AMQP_USER: "roboshop"
+  AMQP_PASS: "roboshop123"
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cart
+  name: payment
   namespace: roboshop
   labels:
     project: roboshop
     environment: {{ .Values.deployment.environment }}
-    component: cart
+    component: payment
     tier: backend
 spec:
   replicas: {{ .Values.deployment.replicas }}
@@ -25,23 +29,23 @@ spec:
     matchLabels:
       project: roboshop
       environment: {{ .Values.deployment.environment }}
-      component: cart
+      component: payment
       tier: backend
   template:
     metadata:
       labels:
         project: roboshop
         environment: {{ .Values.deployment.environment }}
-        component: cart
+        component: payment
         tier: backend
     spec:
       containers:
-      - name: cart
+      - name: payment
         image: {{ .Values.deployment.image }}
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
-            name: cart
+            name: payment
         ports:
         - name: liveness-port
           containerPort: 8080
@@ -70,13 +74,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cart
+  name: payment
   namespace: roboshop
 spec:
   selector:
     project: roboshop
     environment: {{ .Values.deployment.environment }}
-    component: cart
+    component: payment
     tier: backend
   ports:
   - protocol: TCP
@@ -86,19 +90,19 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: cart
+  name: payment
   namespace: roboshop
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: cart
+    name: payment
   minReplicas: 1
   maxReplicas: 10
   metrics:
   - type: Resource
     resource:
-      name: cart
+      name: cpu
       target:
         type: Utilization
         averageUtilization: 50

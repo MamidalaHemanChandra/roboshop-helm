@@ -1,0 +1,6 @@
+deployment:
+  replicas: 1
+  environment: dev
+  image: mamidalahemanchandra/payment:v1
+service:
+  environment: dev
