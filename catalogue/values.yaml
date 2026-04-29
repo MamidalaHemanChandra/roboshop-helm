@@ -1,6 +1,6 @@
-service:
-  environment: dev
-statefulset:
+deployment:
   replicas: 1
   environment: dev
-  image: mamidalahemanchandra/mongodb:v1
+  image: mamidalahemanchandra/cart:v1
+service:
+  environment: dev
