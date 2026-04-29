@@ -16,6 +16,7 @@ metadata:
   namespace: roboshop
   labels:
     project: roboshop
+    environment: {{ .Values.deployment.environment }}
     component: cart
     tier: backend
 spec:
@@ -23,12 +24,14 @@ spec:
   selector:
     matchLabels:
       project: roboshop
+      environment: {{ .Values.deployment.environment }}
       component: cart
       tier: backend
   template:
     metadata:
       labels:
         project: roboshop
+        environment: {{ .Values.deployment.environment }}
         component: cart
         tier: backend
     spec:
@@ -72,6 +75,7 @@ metadata:
 spec:
   selector:
     project: roboshop
+    environment: {{ .Values.deployment.environment }}
     component: cart
     tier: backend
   ports:
@@ -87,6 +91,7 @@ metadata:
 spec:
   selector:
     project: roboshop
+    environment: {{ .Values.deployment.environment }}
     component: catalogue
     tier: backend
   ports:
