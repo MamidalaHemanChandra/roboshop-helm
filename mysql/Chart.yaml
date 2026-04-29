@@ -2,4 +2,4 @@ apiVersion: v2
 name: mysql
 version: 1.0.0
 description: Installing mysql
-appVersion: mamidalahemanchandra/mysql:v1
+appVersion: v1
