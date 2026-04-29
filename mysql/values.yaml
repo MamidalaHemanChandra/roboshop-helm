@@ -1,0 +1,6 @@
+service:
+  environment: dev
+statefulset:
+  replicas: 1
+  environment: dev
+  image: mamidalahemanchandra/mysql:v1

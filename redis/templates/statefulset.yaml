@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: roboshop
+spec:
+  serviceName: "redis-headless"
+  replicas: {{ .Values.statefulset.replicas }}
+  selector:
+    matchLabels:
+      project: roboshop
+      environment: {{ .Values.statefulset.environment }}
+      component: redis
+      tier: db
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        environment: {{ .Values.statefulset.environment }}
+        component: redis
+        tier: db
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.statefulset.image }}
+        volumeMounts:
+        - name: redis
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "roboshop"
+      resources:
+        requests:
+          storage: 1Gi
